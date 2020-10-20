@@ -7,70 +7,70 @@ ENV XDEBUG_PORT 9000
 # Install System Dependencies
 
 RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-	software-properties-common \
-	&& apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y \
-	libfreetype6-dev \
-	libicu-dev \
-  libssl-dev \
-	libjpeg62-turbo-dev \
-	libmcrypt-dev \
-	libedit-dev \
-	libedit2 \
-	libxslt1-dev \
-	apt-utils \
-	gnupg \
-	redis-tools \
-	mysql-client \
-	git \
-	vim \
-	wget \
-	curl \
-	lynx \
-	psmisc \
-	unzip \
-	tar \
-	cron \
-	bash-completion \
-	&& apt-get clean
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    software-properties-common \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    libfreetype6-dev \
+    libicu-dev \
+    libssl-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libedit-dev \
+    libedit2 \
+    libxslt1-dev \
+    apt-utils \
+    gnupg \
+    redis-tools \
+    mysql-client \
+    git \
+    vim \
+    wget \
+    curl \
+    lynx \
+    psmisc \
+    unzip \
+    tar \
+    cron \
+    bash-completion \
+    && apt-get clean
 
 # Install Magento Dependencies
 
 RUN docker-php-ext-configure \
-  	gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
-  	docker-php-ext-install \
-  	opcache \
-  	gd \
-  	bcmath \
-  	intl \
-  	mbstring \
-  	mcrypt \
-  	pdo_mysql \
-  	soap \
-  	xsl \
-  	zip
+    gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
+    docker-php-ext-install \
+    opcache \
+    gd \
+    bcmath \
+    intl \
+    mbstring \
+    mcrypt \
+    pdo_mysql \
+    soap \
+    xsl \
+    zip
 
 # Install oAuth
 
 RUN apt-get update \
-  	&& apt-get install -y \
-  	libpcre3 \
-  	libpcre3-dev \
-  	# php-pear \
-  	&& pecl install oauth \
-  	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
+    && apt-get install -y \
+    libpcre3 \
+    libpcre3-dev \
+    # php-pear \
+    && pecl install oauth \
+    && echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
 
 # Install Node, NVM, NPM and Grunt
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-  	&& apt-get install -y nodejs build-essential \
+    && apt-get install -y nodejs build-essential \
     && curl https://raw.githubusercontent.com/creationix/nvm/v0.16.1/install.sh | sh \
     && npm i -g grunt-cli yarn
 
 # Install Composer
 
-RUN	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
 RUN composer global require hirak/prestissimo
 
 # Install Code Sniffer
@@ -84,7 +84,7 @@ ENV PATH="/var/www/.composer/vendor/bin/:${PATH}"
 # Install XDebug
 
 RUN yes | pecl install xdebug && \
-	 echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
+     echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
 
 # Install Mhsendmail
 
@@ -96,8 +96,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install golang-go \
 # Install Magerun 2
 
 RUN wget https://files.magerun.net/n98-magerun2.phar \
-	&& chmod +x ./n98-magerun2.phar \
-	&& mv ./n98-magerun2.phar /usr/local/bin/
+    && chmod +x ./n98-magerun2.phar \
+    && mv ./n98-magerun2.phar /usr/local/bin/
 
 # Configuring system
 
@@ -115,11 +115,11 @@ RUN echo "source /etc/bash_completion" >> /root/.bashrc
 RUN echo "source /etc/bash_completion" >> /var/www/.bashrc
 
 RUN chmod 777 -Rf /var/www /var/www/.* \
-	&& chown -Rf www-data:www-data /var/www /var/www/.* \
-	&& usermod -u 1000 www-data \
-	&& chsh -s /bin/bash www-data\
-	&& a2enmod rewrite \
-	&& a2enmod headers
+    && chown -Rf www-data:www-data /var/www /var/www/.* \
+    && usermod -u 1000 www-data \
+    && chsh -s /bin/bash www-data\
+    && a2enmod rewrite \
+    && a2enmod headers
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
